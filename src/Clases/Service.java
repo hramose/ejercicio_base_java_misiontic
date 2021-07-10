@@ -13,7 +13,7 @@ import java.util.Date;
  * @author mario
  */
 
-public class Service implements validarServicio{
+public class Service extends Pay implements validarServicio{
     
     private String fecha;
     private Car vehiculo;
@@ -112,6 +112,11 @@ public class Service implements validarServicio{
         }else{
             System.out.println("ingrese otro medio");
         }
+    }
+
+    @Override
+    public void calcularPago() {
+        System.out.println("El pago es 70000");
     }
 
 

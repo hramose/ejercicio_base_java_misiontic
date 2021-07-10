@@ -11,10 +11,9 @@ package Clases;
  */
 public abstract class Pay {
     
-    public abstract void calcularPago();
+    abstract void calcularPago();
     
     public void recibirEfectivo(int valor){
-        System.out.println("Recibi " + valor);
+        System.out.println("Pago recibido en efectivo "+ valor);
     }
-    
 }

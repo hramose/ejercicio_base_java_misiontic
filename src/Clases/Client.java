@@ -5,6 +5,8 @@
  */
 package Clases;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author mario
@@ -36,7 +38,7 @@ public class Client extends Person {
     }
 
     public void pagar(int valor, String medio_pago, int bono) {
-        System.out.println("Voy a pagar " + valor + " en " + medio_pago + " con un bono de "+ bono);
+        System.out.println("Voy a pagar " + valor + " en " + medio_pago + " con un bono de " + bono);
     }
 
     /**
