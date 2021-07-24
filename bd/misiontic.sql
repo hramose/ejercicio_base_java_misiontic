@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-07-2021 a las 13:17:01
+-- Tiempo de generación: 24-07-2021 a las 20:16:18
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.3.16
 
@@ -37,6 +37,14 @@ CREATE TABLE `car` (
   `placa` varchar(7) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `car`
+--
+
+INSERT INTO `car` (`id`, `color`, `marca`, `modelo`, `kilometraje`, `placa`) VALUES
+(1, 'Verde', 'Audi', 2019, 150000, 'OIP789'),
+(4, 'Amarillo', 'MAzda', 2020, 125000, 'OIP788');
+
 -- --------------------------------------------------------
 
 --
@@ -50,6 +58,13 @@ CREATE TABLE `client` (
   `id_persona` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `client`
+--
+
+INSERT INTO `client` (`id`, `celular`, `correo`, `id_persona`) VALUES
+(1, '31478585', 'correo@gmail.com', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -61,6 +76,14 @@ CREATE TABLE `driver` (
   `edad` int(11) NOT NULL,
   `id_persona` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `driver`
+--
+
+INSERT INTO `driver` (`id`, `edad`, `id_persona`) VALUES
+(1, 32, 3),
+(2, 38, 1);
 
 -- --------------------------------------------------------
 
@@ -87,6 +110,15 @@ CREATE TABLE `person` (
   `identificacion` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `person`
+--
+
+INSERT INTO `person` (`id`, `nombre`, `apellidos`, `identificacion`) VALUES
+(1, 'Radamel', 'Garcia', '23565656'),
+(2, 'Lucia', 'Martinez', '45451212'),
+(3, 'Lorena', 'Cortes', '12125545');
+
 -- --------------------------------------------------------
 
 --
@@ -101,6 +133,13 @@ CREATE TABLE `service` (
   `usuario` int(11) DEFAULT NULL,
   `precio_hora` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `service`
+--
+
+INSERT INTO `service` (`id`, `fecha`, `vehiculo`, `conductor`, `usuario`, `precio_hora`) VALUES
+(1, '2021-10-05', 1, 1, 1, 35000);
 
 --
 -- Índices para tablas volcadas
@@ -159,19 +198,19 @@ ALTER TABLE `service`
 -- AUTO_INCREMENT de la tabla `car`
 --
 ALTER TABLE `car`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `client`
 --
 ALTER TABLE `client`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `driver`
 --
 ALTER TABLE `driver`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `pay`
@@ -183,13 +222,13 @@ ALTER TABLE `pay`
 -- AUTO_INCREMENT de la tabla `person`
 --
 ALTER TABLE `person`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
