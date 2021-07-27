@@ -16,7 +16,6 @@ public class ClientController {
 
     public ClientController() {
         
-        modelo.create();
         modelo.read();
     }
     

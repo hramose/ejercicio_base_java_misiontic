@@ -5,25 +5,47 @@
  */
 package Model;
 
+import Clases.Client;
+import Clases.Conn;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author mario
  */
 public class ClientModel {
-    
-    public void create(){
-        System.out.println("crear cliente");
+
+    Conn conexion = new Conn();
+
+    public void create(Client c) {
+        Connection conn = conexion.getConnection();
+        String query = "Insert INTO person(nombre, apellidos, identificacion) VALUES (?, ?, ?)";
+        try {
+        PreparedStatement statmentPerson = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        statmentPerson.setString(1, c.getNombre());
+        statmentPerson.setString(2, c.getApellidos());
+        statmentPerson.setString(3, c.getIdentificacion());
+        int result = statmentPerson.executeUpdate();
+        System.out.println(result);
+        } catch (Exception e) {
+            System.out.println("Error");
+        }
     }
-    
-    public void read(){
+
+    public void read() {
         System.out.println("leer clientes");
     }
-    
-    public void update(){
+
+    public void update() {
         System.out.println("actualizar clientes");
     }
-    
-    public void delete(){
+
+    public void delete() {
         System.out.println("eliminar cliente");
     }
 }

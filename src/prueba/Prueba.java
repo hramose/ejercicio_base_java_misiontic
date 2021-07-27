@@ -7,6 +7,7 @@ package prueba;
 
 import Clases.*;
 import Model.CarModel;
+import Model.ClientModel;
 import java.util.*;
 import javax.swing.JOptionPane;
 
@@ -21,10 +22,10 @@ public class Prueba {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Car carro = new Car("Gris", "Mazda", 2010, 150000, "POP461");
-       CarModel carmodel = new  CarModel();
-       carmodel.Create(carro);
-
+        
+        Client cliente = new Client("correoq@mail.com", "314787878", "Cristina", "Ruiz", "6558555");
+        ClientModel modelo = new ClientModel();
+        modelo.create(cliente);
     }
 
 }
