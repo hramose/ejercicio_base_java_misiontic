@@ -7,6 +7,7 @@ package View;
 
 import Clases.Car;
 import Clases.Client;
+import Model.ClientModel;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -21,11 +22,14 @@ public class Index extends javax.swing.JFrame {
     /**
      * Creates new form Index
      */
-    ArrayList<Client> listaClient = new ArrayList<>();
     ArrayList<Car> listaCar = new ArrayList<>();
+    ClientModel modelo_cliente = new ClientModel();
+    ArrayList<Client> listaClient = modelo_cliente.read();
 
     public Index() {
         initComponents();
+        cargarListaClientes();
+        cargarListaTablaClientes();
     }
 
     /**
@@ -467,6 +471,7 @@ public class Index extends javax.swing.JFrame {
         } else {
             Client cliente = new Client(correo, celular, nombre, apellidos, identificacion);
             // Añadir elemento a la lista
+            modelo_cliente.create(cliente);
             listaClient.add(cliente);
             // Limpiar elementos del texto
             limpiarCamposCliente();
@@ -590,7 +595,7 @@ public class Index extends javax.swing.JFrame {
 
         clientLIst.setModel(model);
     }
-    
+
     public void cargarListaTablaClientes() {
 
         DefaultTableModel tab = new DefaultTableModel();

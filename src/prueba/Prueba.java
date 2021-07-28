@@ -23,7 +23,7 @@ public class Prueba {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        Client cliente = new Client("correoq@mail.com", "314787878", "Cristina", "Ruiz", "6558555");
+        Client cliente = new Client("javier@mail.com", "314785698", "Javier", "Rodriguez", "90785412");
         ClientModel modelo = new ClientModel();
         modelo.create(cliente);
     }
