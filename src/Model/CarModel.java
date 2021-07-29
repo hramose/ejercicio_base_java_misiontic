@@ -8,6 +8,7 @@ package Model;
 import Clases.Car;
 import Clases.Conn;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +21,6 @@ public class CarModel {
     Conn conexion = new Conn();
 
     public void Create(Car c) {
-        
         Connection conn = conexion.getConnection();
         String query = "INSERT INTO car(color, marca, modelo, kilometraje, placa) VALUES (?, ?, ?, ?, ?)";
         try {
@@ -32,20 +32,48 @@ public class CarModel {
             newStatment.setString(5, c.getPlaca());
             newStatment.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println("Error");
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 
-    public void Read() {
-        System.out.println("Leer carros");
+    public ArrayList<Car> Read() {
+        Connection conn = conexion.getConnection();
+        ArrayList<Car> lista_carros = new ArrayList();
+        String query = "SELECT * FROM car;";
+        try {
+            PreparedStatement newStatement = conn.prepareStatement(query);
+            ResultSet resultados = newStatement.executeQuery();
+            while (resultados.next()) {
+                String color = resultados.getString(2);
+                String marca = resultados.getString(3);
+                int modelo = resultados.getInt(4);
+                int kilometraje = resultados.getInt(5);
+                String placa = resultados.getString(6);
+                Car carro = new Car(color, marca, modelo, kilometraje, placa);
+                lista_carros.add(carro);
+            }
+        } catch (Exception e) {
+            System.out.println("Error:" + e.getMessage());
+        }
+        return lista_carros;
     }
 
     public void Update(Car c, String placa) {
         System.out.println("Actualizar carro");
     }
 
-    public void Delete(String placa) {
-        System.out.println("Eliminar carro");
+    public int Delete(String placa) {
+        Connection conn = conexion.getConnection();
+        String query = "DELETE FROM car WHERE placa = ?;";
+        try {
+            PreparedStatement newStatement = conn.prepareStatement(query);
+            newStatement.setString(1, placa);
+            int result = newStatement.executeUpdate();
+            return 1;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
     }
 
     public void GetWithColor(String color) {

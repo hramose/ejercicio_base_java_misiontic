@@ -7,6 +7,7 @@ package View;
 
 import Clases.Car;
 import Clases.Client;
+import Model.CarModel;
 import Model.ClientModel;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -22,14 +23,16 @@ public class Index extends javax.swing.JFrame {
     /**
      * Creates new form Index
      */
-    ArrayList<Car> listaCar = new ArrayList<>();
     ClientModel modelo_cliente = new ClientModel();
+    CarModel modelo_carro = new CarModel();
     ArrayList<Client> listaClient = modelo_cliente.read();
+    ArrayList<Car> listaCar = modelo_carro.Read();
 
     public Index() {
         initComponents();
         cargarListaClientes();
         cargarListaTablaClientes();
+        cargarListaCarros();
     }
 
     /**
@@ -498,6 +501,8 @@ public class Index extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: debe llenar todos los campos");
         } else {
             Car carro = new Car(color, marca, modelo, kilometraje, placa);
+            //GUardamos en elemeneto en la bd
+            modelo_carro.Create(carro);
             // Añadir elemento a la lista
             listaCar.add(carro);
             // Limpiar elementos del texto
@@ -540,8 +545,13 @@ public class Index extends javax.swing.JFrame {
 
         for (int i = 0; i < listaCar.size(); i++) {
             if (listaCar.get(i).getPlaca().equals(placa)) {
-                listaCar.remove(listaCar.get(i));
-                JOptionPane.showMessageDialog(this, "Carro eliminado correctamente");
+                int eliminacion = modelo_carro.Delete(placa);
+                if (eliminacion == 1) {
+                    listaCar.remove(listaCar.get(i));
+                    JOptionPane.showMessageDialog(this, "Carro eliminado correctamente");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error: el carro no puede ser eliminado");
+                }
                 existe = true;
                 cargarListaCarros();
                 limpiarCamposCarro();
