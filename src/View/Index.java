@@ -10,6 +10,9 @@ import Clases.Client;
 import Model.CarModel;
 import Model.ClientModel;
 import java.util.ArrayList;
+import java.util.Vector;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -33,6 +36,14 @@ public class Index extends javax.swing.JFrame {
         cargarListaClientes();
         cargarListaTablaClientes();
         cargarListaCarros();
+        cargarCombo();
+    }
+
+    public void cargarCombo() {
+        comboPersonas.addItem("");
+        for (Client cliente : listaClient) {
+            comboPersonas.addItem(cliente.getIdentificacion() + "-" + cliente.getNombre()+" "+cliente.getApellidos());
+        }   
     }
 
     /**
@@ -63,6 +74,7 @@ public class Index extends javax.swing.JFrame {
         btnBuscarClient = new javax.swing.JButton();
         btnEliminarClient = new javax.swing.JButton();
         btnEditarClient = new javax.swing.JButton();
+        comboPersonas = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         carList = new javax.swing.JList<>();
@@ -165,18 +177,21 @@ public class Index extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addGap(66, 66, 66)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnCrearClient, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
-                    .addComponent(txtApellidos)
-                    .addComponent(txtCorreo)
-                    .addComponent(txtNombre)
-                    .addComponent(txtIdentificacion)
-                    .addComponent(txtCelular))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnBuscarClient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEliminarClient, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                    .addComponent(btnEditarClient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnCrearClient, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                            .addComponent(txtApellidos)
+                            .addComponent(txtCorreo)
+                            .addComponent(txtNombre)
+                            .addComponent(txtIdentificacion)
+                            .addComponent(txtCelular))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnBuscarClient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEliminarClient, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                            .addComponent(btnEditarClient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(comboPersonas, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -208,7 +223,9 @@ public class Index extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminarClient))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(comboPersonas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCrearClient, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarClient)))
@@ -397,18 +414,25 @@ public class Index extends javax.swing.JFrame {
         String identificacion = txtIdentificacion.getValue().toString(); //recibo la identificacion
         String celular = txtCelular.getValue().toString();
         String correo = txtCorreo.getText();
+        Client cliente = new Client(correo, celular, nombre, apellidos, identificacion);
         boolean existe = false;
 
         for (int i = 0; i < listaClient.size(); i++) {
             if (listaClient.get(i).getIdentificacion().equals(identificacion)) {
-                listaClient.get(i).setNombre(nombre);
-                listaClient.get(i).setApellidos(apellidos);
-                listaClient.get(i).setTelefono(celular);
-                listaClient.get(i).setCorreo(correo);
+                int resultado = modelo_cliente.update(cliente, identificacion);
+                if (resultado == 1) {
+                    listaClient.get(i).setNombre(nombre);
+                    listaClient.get(i).setApellidos(apellidos);
+                    listaClient.get(i).setTelefono(celular);
+                    listaClient.get(i).setCorreo(correo);
+                    JOptionPane.showMessageDialog(this, "El cliente fue actualizado correctamente");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El cliente no pudo ser actualizado");
+                }
                 cargarListaClientes();
+                cargarListaTablaClientes();
                 limpiarCamposCliente();
                 existe = true;
-                JOptionPane.showMessageDialog(this, "El cliente fue actualizado correctamente");
                 break;
             }
         }
@@ -425,8 +449,13 @@ public class Index extends javax.swing.JFrame {
 
         for (int i = 0; i < listaClient.size(); i++) {
             if (listaClient.get(i).getIdentificacion().equals(identificacion)) {
-                listaClient.remove(listaClient.get(i));
-                JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente");
+                int result = modelo_cliente.delete(identificacion);
+                if (result == 1) {
+                    listaClient.remove(listaClient.get(i));
+                    JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El cliente no pudo ser eliminado");
+                }
                 existe = true;
                 limpiarCamposCliente();
                 cargarListaClientes();
@@ -469,6 +498,9 @@ public class Index extends javax.swing.JFrame {
         String celular = txtCelular.getValue().toString();
         String correo = txtCorreo.getText();
 
+        String aeropuerto_seleccionado = (String) comboPersonas.getSelectedItem();
+        String[] partes = aeropuerto_seleccionado.split("-");
+        System.out.println(partes[0]);
         if (nombre.equals("") || apellidos.equals("") || identificacion.equals("") || celular.equals("") || correo.equals("")) {
             JOptionPane.showMessageDialog(null, "Error: debe llenar todos los campos");
         } else {
@@ -697,6 +729,7 @@ public class Index extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarClient;
     private javax.swing.JList<String> carList;
     private javax.swing.JList<String> clientLIst;
+    private javax.swing.JComboBox<String> comboPersonas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;

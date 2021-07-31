@@ -76,11 +76,40 @@ public class ClientModel {
         return lista_cientes;
     }
 
-    public void update() {
-        System.out.println("actualizar clientes");
+    public int update(Client c, String identificacion) {
+        Connection conn = conexion.getConnection();
+        String query = "UPDATE client INNER JOIN person ON client.id_persona = person.id "
+                + "SET client.celular = ?, "
+                + "client.correo = ?, "
+                + "person.nombre = ?, "
+                + "person.apellidos = ? "
+                + "WHERE person.identificacion = ?";
+        try {
+            PreparedStatement newStatement = conn.prepareStatement(query);
+            newStatement.setString(1, c.getTelefono());
+            newStatement.setString(2, c.getCorreo());
+            newStatement.setString(3, c.getNombre());
+            newStatement.setString(4, c.getApellidos());
+            newStatement.setString(5, identificacion);
+            newStatement.executeUpdate();
+            return 1;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
     }
 
-    public void delete() {
-        System.out.println("eliminar cliente");
+    public int delete(String identificacion) {
+        Connection conn = conexion.getConnection();
+        String query = "DELETE client FROM client INNER JOIN person ON client.id_persona = person.id WHERE person.identificacion = ?";
+        try {
+            PreparedStatement newStatement = conn.prepareStatement(query);
+            newStatement.setString(1, identificacion);
+            newStatement.executeUpdate();
+            return 1;
+        } catch (Exception e) {
+            System.out.println("Error:" + e.getMessage());
+        }
+        return 0;
     }
 }
