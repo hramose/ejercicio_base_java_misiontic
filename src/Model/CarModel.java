@@ -58,8 +58,27 @@ public class CarModel {
         return lista_carros;
     }
 
-    public void Update(Car c, String placa) {
-        System.out.println("Actualizar carro");
+    public int Update(Car c, String placa) {
+        Connection conn = conexion.getConnection();
+        String query = "UPDATE car "
+                + "SET color = ?, "
+                + "marca = ?, "
+                + "modelo = ?, "
+                + "kilometraje = ? "
+                + "WHERE placa = ?";
+        try {
+            PreparedStatement newStatement = conn.prepareStatement(query);
+            newStatement.setString(1, c.getColor());
+            newStatement.setString(2, c.getMarca());
+            newStatement.setInt(3, c.getModelo());
+            newStatement.setInt(4, c.getKilometraje());
+            newStatement.setString(5, placa);
+            newStatement.executeUpdate();
+            return 1;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return 0;
     }
 
     public int Delete(String placa) {

@@ -36,14 +36,23 @@ public class Index extends javax.swing.JFrame {
         cargarListaClientes();
         cargarListaTablaClientes();
         cargarListaCarros();
-        cargarCombo();
+        cargarComboClientes();
+        cargarComboCarros();
     }
 
-    public void cargarCombo() {
+    public void cargarComboClientes() {
         comboPersonas.addItem("");
         for (Client cliente : listaClient) {
-            comboPersonas.addItem(cliente.getIdentificacion() + "-" + cliente.getNombre()+" "+cliente.getApellidos());
-        }   
+            comboPersonas.addItem(cliente.getIdentificacion() + "-" + cliente.getNombre() + " " + cliente.getApellidos());
+        }
+    }
+    
+    public void cargarComboCarros(){
+        int n = 1;
+        for(Car carro: listaCar){
+            comboCarros.addItem(n + "-" +carro.getMarca());
+            n++;
+        }
     }
 
     /**
@@ -93,6 +102,7 @@ public class Index extends javax.swing.JFrame {
         btnEliminarCar = new javax.swing.JButton();
         btnEditarCar = new javax.swing.JButton();
         txtModelo = new javax.swing.JSpinner();
+        comboCarros = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableClients = new javax.swing.JTable();
@@ -261,6 +271,12 @@ public class Index extends javax.swing.JFrame {
 
         jLabel10.setText("Placa");
 
+        txtPlaca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPlacaActionPerformed(evt);
+            }
+        });
+
         btnCrearCar.setText("Crear");
         btnCrearCar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -303,19 +319,25 @@ public class Index extends javax.swing.JFrame {
                         .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
                     .addComponent(jLabel10))
                 .addGap(46, 46, 46)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtKilometraje)
-                    .addComponent(btnCrearCar, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(txtColor)
-                    .addComponent(txtMarca)
-                    .addComponent(txtPlaca)
-                    .addComponent(txtModelo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnEliminarCar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBuscarCar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEditarCar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtKilometraje)
+                                .addComponent(btnCrearCar, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                                .addComponent(txtColor)
+                                .addComponent(txtMarca)
+                                .addComponent(txtModelo))
+                            .addComponent(comboCarros, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnEliminarCar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnBuscarCar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEditarCar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(20, 20, 20))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,12 +364,14 @@ public class Index extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(txtKilometraje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel10)
-                        .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnEditarCar))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEditarCar)
+                    .addComponent(comboCarros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addComponent(btnCrearCar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -528,7 +552,11 @@ public class Index extends javax.swing.JFrame {
         int modelo = (int) txtModelo.getValue();
         int kilometraje = (int) txtKilometraje.getValue();
         String placa = txtPlaca.getText();
-
+        String estacion = (String) comboCarros.getSelectedItem();
+        String[] datos_estacion = estacion.split("-");
+        int origen = Integer.parseInt(datos_estacion[0]);
+        System.out.println(origen);
+        
         if (color.equals("") || marca.equals("") || modelo == 0 || kilometraje == 0 || placa.equals("")) {
             JOptionPane.showMessageDialog(null, "Error: debe llenar todos los campos");
         } else {
@@ -604,18 +632,23 @@ public class Index extends javax.swing.JFrame {
         int modelo = (int) txtModelo.getValue();
         int kilometraje = (int) txtKilometraje.getValue();
         String placa = txtPlaca.getText();
-
+        Car carro = new Car(color, marca, modelo, kilometraje, placa);
         boolean existe = false;
 
         for (int i = 0; i < listaCar.size(); i++) {
             if (listaCar.get(i).getPlaca().equals(placa)) {
-                listaCar.get(i).setColor(color);
-                listaCar.get(i).setMarca(marca);
-                listaCar.get(i).setModelo(modelo);
-                listaCar.get(i).setKilometraje(kilometraje);
-                cargarListaCarros();
-                limpiarCamposCarro();
-                JOptionPane.showMessageDialog(this, "Carro editado correctamente");
+                int resultado = modelo_carro.Update(carro, placa);
+                if (resultado == 1) {
+                    listaCar.get(i).setColor(color);
+                    listaCar.get(i).setMarca(marca);
+                    listaCar.get(i).setModelo(modelo);
+                    listaCar.get(i).setKilometraje(kilometraje);
+                    cargarListaCarros();
+                    limpiarCamposCarro();
+                    JOptionPane.showMessageDialog(this, "Carro editado correctamente");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error, no se pudo editar el carro");
+                }
                 existe = true;
                 break;
             }
@@ -626,6 +659,10 @@ public class Index extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnEditarCarActionPerformed
+
+    private void txtPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPlacaActionPerformed
 
     public void cargarListaClientes() {
 
@@ -729,6 +766,7 @@ public class Index extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarClient;
     private javax.swing.JList<String> carList;
     private javax.swing.JList<String> clientLIst;
+    private javax.swing.JComboBox<String> comboCarros;
     private javax.swing.JComboBox<String> comboPersonas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
