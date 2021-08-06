@@ -24,7 +24,7 @@ public class ClientModel {
 
     Conn conexion = new Conn();
 
-    public void create(Client c) {
+    public int create(Client c) {
         Connection conn = conexion.getConnection();
         String query = "Insert INTO person(nombre, apellidos, identificacion) VALUES (?, ?, ?)";
         try {
@@ -43,6 +43,7 @@ public class ClientModel {
                         statmentClient.setString(2, c.getCorreo());
                         statmentClient.setInt(3, generatedKey.getInt(1));
                         statmentClient.executeUpdate();
+                        return 1;
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
                     }
@@ -50,8 +51,9 @@ public class ClientModel {
             }
 
         } catch (Exception e) {
-            System.out.println("Error");
+            System.out.println("Error" + e.getMessage());
         }
+        return 0;
     }
 
     public ArrayList<Client> read() {
@@ -107,7 +109,7 @@ public class ClientModel {
             newStatement.setString(1, identificacion);
             newStatement.executeUpdate();
             return 1;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error:" + e.getMessage());
         }
         return 0;

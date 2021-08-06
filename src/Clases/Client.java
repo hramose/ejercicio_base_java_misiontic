@@ -22,6 +22,10 @@ public class Client extends Person {
         this.telefono = telefono;
     }
 
+    public Client() {
+        super(null, null, null);
+    } 
+
     //Polimorfismo por sobrescritura
     @Override
     public void saludar(Person per) {
@@ -29,8 +33,8 @@ public class Client extends Person {
     }
 
     //Polimorfismo por sobrecargar
-    public void pagar(int valor) {
-        System.out.println("Voy a pagar " + valor + " en efectivo");
+    public String pagar(int valor) {
+        return "Voy a pagar " + valor + " en efectivo";
     }
 
     public void pagar(int valor, String medio_pago) {

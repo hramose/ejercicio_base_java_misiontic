@@ -20,7 +20,7 @@ public class CarModel {
 
     Conn conexion = new Conn();
 
-    public void Create(Car c) {
+    public int Create(Car c) {
         Connection conn = conexion.getConnection();
         String query = "INSERT INTO car(color, marca, modelo, kilometraje, placa) VALUES (?, ?, ?, ?, ?)";
         try {
@@ -31,9 +31,11 @@ public class CarModel {
             newStatment.setInt(4, c.getKilometraje());
             newStatment.setString(5, c.getPlaca());
             newStatment.executeUpdate();
+            return 1;
         } catch (SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
+        return 0;
     }
 
     public ArrayList<Car> Read() {

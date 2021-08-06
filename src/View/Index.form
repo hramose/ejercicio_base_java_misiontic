@@ -135,7 +135,7 @@
                                   <Component id="btnEditarClient" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="comboPersonas" min="-2" pref="175" max="-2" attributes="0"/>
+                          <Component id="comboPersonas" min="-2" pref="164" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="58" max="32767" attributes="0"/>
                   </Group>
