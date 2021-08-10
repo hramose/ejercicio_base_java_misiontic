@@ -7,6 +7,7 @@ package Model;
 
 import Clases.Car;
 import Clases.Conn;
+import Clases.CountCarColor;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -99,5 +100,24 @@ public class CarModel {
 
     public void GetWithColor(String color) {
         System.out.println("carros de un color especifico");
+    }
+
+    public ArrayList<CountCarColor> GetCountColor() {
+        Connection conn = conexion.getConnection();
+        ArrayList<CountCarColor> carros = new ArrayList<>();
+        String query = "SELECT COUNT(*) AS cantidad, color FROM car GROUP BY color;";
+        try {
+            PreparedStatement newStatement = conn.prepareStatement(query);
+            ResultSet resultados = newStatement.executeQuery();
+            while (resultados.next()) {
+                int cantidad = resultados.getInt(1);
+                String color = resultados.getString(2);
+                CountCarColor objectCar = new CountCarColor(cantidad, color);
+                carros.add(objectCar);
+            }
+        } catch (Exception e) {
+            System.out.println("Error:" + e);
+        }
+        return carros;
     }
 }

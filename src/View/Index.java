@@ -7,6 +7,7 @@ package View;
 
 import Clases.Car;
 import Clases.Client;
+import Clases.CountCarColor;
 import Model.CarModel;
 import Model.ClientModel;
 import java.util.ArrayList;
@@ -16,6 +17,12 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.*;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.*;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -33,26 +40,56 @@ public class Index extends javax.swing.JFrame {
 
     public Index() {
         initComponents();
-        cargarListaClientes();
-        cargarListaTablaClientes();
-        cargarListaCarros();
-        cargarComboClientes();
-        cargarComboCarros();
+        this.cargarListaClientes();
+        this.cargarListaTablaClientes();
+        this.cargarListaCarros();
+        this.cargarComboClientes();
+        this.cargarComboCarros();
+        this.cargarGraficoCarrosBar();
+        this.cargarGraficoCarrosPie();
+
     }
 
     public void cargarComboClientes() {
+        comboPersonas.removeAllItems();
         comboPersonas.addItem("");
         for (Client cliente : listaClient) {
             comboPersonas.addItem(cliente.getIdentificacion() + "-" + cliente.getNombre() + " " + cliente.getApellidos());
         }
     }
-    
-    public void cargarComboCarros(){
+
+    public void cargarComboCarros() {
         int n = 1;
-        for(Car carro: listaCar){
-            comboCarros.addItem(n + "-" +carro.getMarca());
+        for (Car carro : listaCar) {
+            comboCarros.addItem(n + "-" + carro.getMarca());
             n++;
         }
+    }
+
+    public void cargarGraficoCarrosPie() {
+        ArrayList<CountCarColor> lista_grafico = modelo_carro.GetCountColor();
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        for (CountCarColor index : lista_grafico) {
+            dataset.setValue(index.getColor(), index.getCantidad());
+        }
+        JFreeChart chart = ChartFactory.createPieChart("Grafico de carros por color", dataset);
+        ChartPanel panel = new ChartPanel(chart);
+        panelGraficoTorta.setLayout(new java.awt.BorderLayout());
+        panelGraficoTorta.add(panel);
+        panelGraficoTorta.validate();
+    }
+
+    public void cargarGraficoCarrosBar() {
+        ArrayList<CountCarColor> lista_grafico = modelo_carro.GetCountColor();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (CountCarColor index : lista_grafico) {
+            dataset.setValue(index.getCantidad(), index.getColor(), index.getColor());
+        }
+        JFreeChart chart = ChartFactory.createBarChart("Graficos de carros por color", "Color", "", dataset);
+        ChartPanel panel = new ChartPanel(chart);
+        panelGraficoBarras.setLayout(new java.awt.BorderLayout());
+        panelGraficoBarras.add(panel);
+        panelGraficoBarras.validate();
     }
 
     /**
@@ -106,6 +143,8 @@ public class Index extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableClients = new javax.swing.JTable();
+        panelGraficoTorta = new javax.swing.JPanel();
+        panelGraficoBarras = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -411,6 +450,32 @@ public class Index extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Ejemplo Tabla", jPanel3);
 
+        javax.swing.GroupLayout panelGraficoTortaLayout = new javax.swing.GroupLayout(panelGraficoTorta);
+        panelGraficoTorta.setLayout(panelGraficoTortaLayout);
+        panelGraficoTortaLayout.setHorizontalGroup(
+            panelGraficoTortaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 432, Short.MAX_VALUE)
+        );
+        panelGraficoTortaLayout.setVerticalGroup(
+            panelGraficoTortaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 297, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Grafico torta", panelGraficoTorta);
+
+        javax.swing.GroupLayout panelGraficoBarrasLayout = new javax.swing.GroupLayout(panelGraficoBarras);
+        panelGraficoBarras.setLayout(panelGraficoBarrasLayout);
+        panelGraficoBarrasLayout.setHorizontalGroup(
+            panelGraficoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 432, Short.MAX_VALUE)
+        );
+        panelGraficoBarrasLayout.setVerticalGroup(
+            panelGraficoBarrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 297, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Grafico Barras", panelGraficoBarras);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -430,6 +495,126 @@ public class Index extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEditarCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCarActionPerformed
+        // TODO add your handling code here:
+
+        String color = txtColor.getText();
+        String marca = txtMarca.getText();
+        int modelo = (int) txtModelo.getValue();
+        int kilometraje = (int) txtKilometraje.getValue();
+        String placa = txtPlaca.getText();
+        Car carro = new Car(color, marca, modelo, kilometraje, placa);
+        boolean existe = false;
+
+        for (int i = 0; i < listaCar.size(); i++) {
+            if (listaCar.get(i).getPlaca().equals(placa)) {
+                int resultado = modelo_carro.Update(carro, placa);
+                if (resultado == 1) {
+                    listaCar.get(i).setColor(color);
+                    listaCar.get(i).setMarca(marca);
+                    listaCar.get(i).setModelo(modelo);
+                    listaCar.get(i).setKilometraje(kilometraje);
+                    cargarListaCarros();
+                    limpiarCamposCarro();
+                    JOptionPane.showMessageDialog(this, "Carro editado correctamente");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error, no se pudo editar el carro");
+                }
+                existe = true;
+                break;
+            }
+        }
+
+        if (!existe) {
+            JOptionPane.showMessageDialog(this, "El Carro no esta registrado");
+        }
+    }//GEN-LAST:event_btnEditarCarActionPerformed
+
+    private void btnEliminarCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCarActionPerformed
+        // TODO add your handling code here:
+
+        String placa = txtPlaca.getText();
+
+        boolean existe = false;
+
+        for (int i = 0; i < listaCar.size(); i++) {
+            if (listaCar.get(i).getPlaca().equals(placa)) {
+                int eliminacion = modelo_carro.Delete(placa);
+                if (eliminacion == 1) {
+                    listaCar.remove(listaCar.get(i));
+                    JOptionPane.showMessageDialog(this, "Carro eliminado correctamente");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error: el carro no puede ser eliminado");
+                }
+                existe = true;
+                cargarListaCarros();
+                limpiarCamposCarro();
+                cargarGraficoCarrosPie();
+                break;
+            }
+        }
+
+        if (!existe) {
+            JOptionPane.showMessageDialog(this, "El Carro no esta registrado");
+        }
+    }//GEN-LAST:event_btnEliminarCarActionPerformed
+
+    private void btnBuscarCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCarActionPerformed
+        // TODO add your handling code here:
+        String placa = txtPlaca.getText();
+
+        boolean existe = false;
+
+        for (int i = 0; i < listaCar.size(); i++) {
+            if (listaCar.get(i).getPlaca().equals(placa)) {
+                txtColor.setText(listaCar.get(i).getColor());
+                txtMarca.setText(listaCar.get(i).getMarca());
+                txtModelo.setValue(listaCar.get(i).getModelo());
+                txtKilometraje.setValue(listaCar.get(i).getKilometraje());
+                txtPlaca.setText(listaCar.get(i).getPlaca());
+                existe = true;
+                break;
+            }
+        }
+
+        if (!existe) {
+            JOptionPane.showMessageDialog(this, "El Carro no esta registrado");
+        }
+    }//GEN-LAST:event_btnBuscarCarActionPerformed
+
+    private void btnCrearCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCarActionPerformed
+        // TODO add your handling code here:
+
+        String color = txtColor.getText();
+        String marca = txtMarca.getText();
+        int modelo = (int) txtModelo.getValue();
+        int kilometraje = (int) txtKilometraje.getValue();
+        String placa = txtPlaca.getText();
+        String estacion1 = (String) comboCarros.getSelectedItem();
+        String[] datos_estacion = estacion1.split("-");
+        int origen = Integer.parseInt(datos_estacion[0]);
+        System.out.println(origen);
+
+        if (color.equals("") || marca.equals("") || modelo == 0 || kilometraje == 0 || placa.equals("")) {
+            JOptionPane.showMessageDialog(null, "Error: debe llenar todos los campos");
+        } else {
+            Car carro = new Car(color, marca, modelo, kilometraje, placa);
+            //GUardamos en elemeneto en la bd
+            modelo_carro.Create(carro);
+            // Añadir elemento a la lista
+            listaCar.add(carro);
+            // Limpiar elementos del texto
+            cargarListaCarros();
+            cargarGraficoCarrosPie();
+            limpiarCamposCarro();
+            JOptionPane.showMessageDialog(this, "Carro " + placa + " fue creado correctamente");
+        }
+    }//GEN-LAST:event_btnCrearCarActionPerformed
+
+    private void txtPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPlacaActionPerformed
 
     private void btnEditarClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClientActionPerformed
         // TODO add your handling code here:
@@ -543,126 +728,6 @@ public class Index extends javax.swing.JFrame {
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
-
-    private void btnCrearCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCarActionPerformed
-        // TODO add your handling code here:
-
-        String color = txtColor.getText();
-        String marca = txtMarca.getText();
-        int modelo = (int) txtModelo.getValue();
-        int kilometraje = (int) txtKilometraje.getValue();
-        String placa = txtPlaca.getText();
-        String estacion = (String) comboCarros.getSelectedItem();
-        String[] datos_estacion = estacion.split("-");
-        int origen = Integer.parseInt(datos_estacion[0]);
-        System.out.println(origen);
-        
-        if (color.equals("") || marca.equals("") || modelo == 0 || kilometraje == 0 || placa.equals("")) {
-            JOptionPane.showMessageDialog(null, "Error: debe llenar todos los campos");
-        } else {
-            Car carro = new Car(color, marca, modelo, kilometraje, placa);
-            //GUardamos en elemeneto en la bd
-            modelo_carro.Create(carro);
-            // Añadir elemento a la lista
-            listaCar.add(carro);
-            // Limpiar elementos del texto
-            cargarListaCarros();
-            limpiarCamposCarro();
-            JOptionPane.showMessageDialog(this, "Carro " + placa + " fue creado correctamente");
-        }
-
-    }//GEN-LAST:event_btnCrearCarActionPerformed
-
-    private void btnBuscarCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCarActionPerformed
-        // TODO add your handling code here:
-        String placa = txtPlaca.getText();
-
-        boolean existe = false;
-
-        for (int i = 0; i < listaCar.size(); i++) {
-            if (listaCar.get(i).getPlaca().equals(placa)) {
-                txtColor.setText(listaCar.get(i).getColor());
-                txtMarca.setText(listaCar.get(i).getMarca());
-                txtModelo.setValue(listaCar.get(i).getModelo());
-                txtKilometraje.setValue(listaCar.get(i).getKilometraje());
-                txtPlaca.setText(listaCar.get(i).getPlaca());
-                existe = true;
-                break;
-            }
-        }
-
-        if (!existe) {
-            JOptionPane.showMessageDialog(this, "El Carro no esta registrado");
-        }
-    }//GEN-LAST:event_btnBuscarCarActionPerformed
-
-    private void btnEliminarCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCarActionPerformed
-        // TODO add your handling code here:
-
-        String placa = txtPlaca.getText();
-
-        boolean existe = false;
-
-        for (int i = 0; i < listaCar.size(); i++) {
-            if (listaCar.get(i).getPlaca().equals(placa)) {
-                int eliminacion = modelo_carro.Delete(placa);
-                if (eliminacion == 1) {
-                    listaCar.remove(listaCar.get(i));
-                    JOptionPane.showMessageDialog(this, "Carro eliminado correctamente");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error: el carro no puede ser eliminado");
-                }
-                existe = true;
-                cargarListaCarros();
-                limpiarCamposCarro();
-                break;
-            }
-        }
-
-        if (!existe) {
-            JOptionPane.showMessageDialog(this, "El Carro no esta registrado");
-        }
-    }//GEN-LAST:event_btnEliminarCarActionPerformed
-
-    private void btnEditarCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCarActionPerformed
-        // TODO add your handling code here:
-
-        String color = txtColor.getText();
-        String marca = txtMarca.getText();
-        int modelo = (int) txtModelo.getValue();
-        int kilometraje = (int) txtKilometraje.getValue();
-        String placa = txtPlaca.getText();
-        Car carro = new Car(color, marca, modelo, kilometraje, placa);
-        boolean existe = false;
-
-        for (int i = 0; i < listaCar.size(); i++) {
-            if (listaCar.get(i).getPlaca().equals(placa)) {
-                int resultado = modelo_carro.Update(carro, placa);
-                if (resultado == 1) {
-                    listaCar.get(i).setColor(color);
-                    listaCar.get(i).setMarca(marca);
-                    listaCar.get(i).setModelo(modelo);
-                    listaCar.get(i).setKilometraje(kilometraje);
-                    cargarListaCarros();
-                    limpiarCamposCarro();
-                    JOptionPane.showMessageDialog(this, "Carro editado correctamente");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error, no se pudo editar el carro");
-                }
-                existe = true;
-                break;
-            }
-        }
-
-        if (!existe) {
-            JOptionPane.showMessageDialog(this, "El Carro no esta registrado");
-        }
-
-    }//GEN-LAST:event_btnEditarCarActionPerformed
-
-    private void txtPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPlacaActionPerformed
 
     public void cargarListaClientes() {
 
@@ -787,6 +852,8 @@ public class Index extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel panelGraficoBarras;
+    private javax.swing.JPanel panelGraficoTorta;
     private javax.swing.JTable tableClients;
     private javax.swing.JTextField txtApellidos;
     private javax.swing.JSpinner txtCelular;
