@@ -57,6 +57,7 @@ public class Index extends javax.swing.JFrame {
         for (Client cliente : listaClient) {
             comboPersonas.addItem(cliente.getIdentificacion() + "-" + cliente.getNombre() + " " + cliente.getApellidos());
         }
+        comboPersonas.setSelectedIndex(0);
     }
 
     public void cargarComboCarros() {
@@ -725,7 +726,7 @@ public class Index extends javax.swing.JFrame {
 
         String aeropuerto_seleccionado = (String) comboPersonas.getSelectedItem();
         String[] partes = aeropuerto_seleccionado.split("-");
-        System.out.println(partes[0]);
+        int origen = Integer.parseInt(partes[0]);
         if (nombre.equals("") || apellidos.equals("") || identificacion.equals("") || celular.equals("") || correo.equals("")) {
             JOptionPane.showMessageDialog(null, "Error: debe llenar todos los campos");
         } else {
